@@ -1,0 +1,9 @@
+---
+- name: First Project
+  hosts: all
+  # become: yes
+  gather_facts: no
+
+  roles:
+    - { role: deploy_traefik_consul_vault, when: inventory_hostname == "docker1" }
+    - { role: deploy_apps_registrator, when: inventory_hostname == "docker2" }

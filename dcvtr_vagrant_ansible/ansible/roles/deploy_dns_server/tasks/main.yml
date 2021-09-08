@@ -1,0 +1,33 @@
+---
+# tasks file for deploy_dns_server
+- block: # =======Block for DNS_node======
+    - name: Update environment
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    - name: Install Bind9
+      apt: name=bind9 state=present
+    - name: Install bind9utils
+      apt: name=bind9utils state=present
+    - name: Install bind9-doc
+      apt: name=bind9-doc state=present
+    - name: Configure ipv4
+      copy: src=bind9 dest=/etc/default/
+    - name: Configure file parameters
+      copy: src=named.conf.options dest=/etc/bind/
+    - name: Configure local file parameters
+      copy: src=named.conf.local dest=/etc/bind/
+    - name: Create folder zones
+      file:
+        path: /etc/bind/zones
+        state: directory
+        mode: 0755
+    - name: Configure direct looking zones
+      copy: src=db.my.domain dest=/etc/bind/zones
+    - name: Configure forward looking zones
+      copy: src=db.192.168 dest=/etc/bind/zones
+    - name: Restarted DNS with new configs
+      command: systemctl restart bind9
+  when: ansible_nodename == "DNS-node"
+
+- block: # =======Block for DNS_agents======
+    - name: Create DNS config file
+      copy: src=00-private-nameservers.yaml dest=/etc/netplan/

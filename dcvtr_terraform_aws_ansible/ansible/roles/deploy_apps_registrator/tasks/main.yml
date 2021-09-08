@@ -1,0 +1,7 @@
+---
+# tasks file for deploy_apps_registrator
+- name: Generate Docker-compose file
+  template: src=docker-compose.j2 dest={{ destin_folder }}/docker-compose.yml
+
+- name: Start apps_registrator
+  shell: docker-compose up -d

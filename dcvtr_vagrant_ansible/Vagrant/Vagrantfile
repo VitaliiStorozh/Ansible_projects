@@ -1,0 +1,48 @@
+Vagrant.configure("2") do |config|
+  config.vagrant.plugins = "vagrant-docker-compose"
+
+  config.vm.define "DNS_node" do |dns|
+    dns.vm.box = "hashicorp/bionic64"
+    dns.vm.hostname = "DNS-node"
+    dns.vm.provider "virtualbox" do |v|
+      v.name = "DNS_node"
+    end
+    dns.vm.network "public_network", ip: "192.168.1.208", bridge: 'Intel(R) Wireless-AC 9560 160MHz'
+  end
+
+  config.vm.define "Ansible_node" do |ansible1|
+    ansible1.vm.box = "hashicorp/bionic64"
+    ansible1.vm.hostname = "Ansible-node"
+    ansible1.vm.provider "virtualbox" do |v|
+      v.name = "Ansible_node"
+    end
+    ansible1.vm.provision :shell, path: "bootstrap.sh"
+    ansible1.vm.network "public_network", ip: "192.168.1.211", bridge: 'Intel(R) Wireless-AC 9560 160MHz'
+  end
+
+  config.vm.define "First_node" do |docker1|
+    docker1.vm.box = "hashicorp/bionic64"
+    docker1.vm.hostname = "First-node"
+    docker1.vm.provider "virtualbox" do |v|
+      v.name = "First_node"
+    end
+    docker1.vm.provision "docker" do |d|
+    end
+    docker1.vm.provision "docker_compose" do |d|
+    end
+    docker1.vm.network "public_network", ip: "192.168.1.209", bridge: 'Intel(R) Wireless-AC 9560 160MHz'
+  end
+
+  config.vm.define "Second_node" do |docker2|
+    docker2.vm.box = "hashicorp/bionic64"
+    docker2.vm.hostname = "Second-node"
+    docker2.vm.provider "virtualbox" do |v|
+      v.name = "Second_node"
+    end
+    docker2.vm.provision "docker" do |d|
+    end
+    docker2.vm.provision "docker_compose" do |d|
+    end
+    docker2.vm.network "public_network", ip: "192.168.1.210", bridge: 'Intel(R) Wireless-AC 9560 160MHz'
+  end
+end

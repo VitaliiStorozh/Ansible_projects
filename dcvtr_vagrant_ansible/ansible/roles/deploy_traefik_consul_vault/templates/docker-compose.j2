@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  traefik:
+    image: "traefik:v2.4"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.consulcatalog=true"
+      - "--providers.consulcatalog.endpoint.address=consul:8500"
+      - "--providers.consulcatalog.exposedByDefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.file.directory=/configuration/"
+      - "--providers.file.watch=true"
+
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /home/vagrant/configuration/:/configuration/
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - consul
+
+  consul:
+    image: consul
+    container_name: "consul"
+    command: agent -server -client=0.0.0.0 -ui -bootstrap-expect=1 -advertise {{ hostvars['docker1']['ansible_host']}}
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8500:8500'
+
+  vault:
+    image: vault
+    container_name: "vault"
+    ports:
+      - "8200:8200"
+
+
+  registrator:
+    depends_on:
+      - consul
+    image: gliderlabs/registrator:master
+    command: -internal consul://consul:8500
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    links:
+      - consul
+
+volumes:
+  letsencrypt:

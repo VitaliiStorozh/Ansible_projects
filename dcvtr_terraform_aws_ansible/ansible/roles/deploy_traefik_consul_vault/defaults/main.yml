@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_traefik_consul_vault
+destin_folder: /home/ec2-user/

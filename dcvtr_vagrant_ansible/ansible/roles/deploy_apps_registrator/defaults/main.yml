@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_apps_registrator
+destin_folder: /home/vagrant/

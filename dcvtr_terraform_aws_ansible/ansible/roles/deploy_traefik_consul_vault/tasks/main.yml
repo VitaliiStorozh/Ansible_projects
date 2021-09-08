@@ -1,0 +1,27 @@
+---
+# tasks file for deploy_traefik_consul_vault
+
+- name: Generate Docker-compose file
+  template: src=docker-compose.j2 dest={{ destin_folder }}/docker-compose.yml
+
+- name: Create Folder configuration
+  file:
+    path: /home/ec2-user/configuration
+    state: directory
+    mode: 0755
+
+- name: Create certificate
+  copy: src=create_certificate_for_domain.sh dest=/home/ec2-user/configuration/ mode=755
+- name: Generate certeficate
+  shell: ./configuration/create_certificate_for_domain.sh {{ dns_name }}
+- name: Create certificate
+  copy: src=certificates.yml dest=/home/ec2-user/configuration/
+
+- name: Create cron job for revoke certeficate
+  cron:
+    name: "create_certificate"
+    hour: "8"
+    job: "/home/ec2-user/configuration/create_certificate_for_domain.sh {{ dns_name }}"
+
+- name: Start traefik_consul_vault
+  shell: docker-compose up -d

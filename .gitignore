@@ -1,0 +1,5 @@
+.vagrant/
+PasswordForVault.txt
+.terraform/
+.terraform*
+terraform.tfstate*

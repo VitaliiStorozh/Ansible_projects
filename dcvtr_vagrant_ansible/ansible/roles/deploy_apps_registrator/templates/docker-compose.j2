@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  registrator:
+    depends_on:
+      - consul
+    image: gliderlabs/registrator:master
+    restart: always
+    command: -useIpFromLabel SERVICE_ADDRESS -internal consul://{{ hostvars['docker2']['ansible_host']}}:8500
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+
+  consul:
+    image: consul
+    container_name: "consul"
+    command: agent -server -advertise {{ hostvars['docker2']['ansible_host']}} -join {{ hostvars['docker1']['ansible_host']}} -client=0.0.0.0
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8500:8500'
+
+  test:
+    image: adminer:4.6.3-standalone
+    ports:
+      - "8080:8080"
+    labels:
+      - SERVICE_TAGS=traefik.enable=true,traefik.http.routers.test.rule=Host(`First-node.my.domain`) && PathPrefix(`/test`),traefik.http.routers.test.middlewares=test-stripprefix,traefik.http.middlewares.test-stripprefix.stripprefix.prefixes=/test,traefik.http.routers.test.tls=true
+      - SERVICE_NAME=test
+      - SERVICE_ADDRESS={{ hostvars['docker2']['ansible_host']}}
+
+  app:
+    image: nginx
+    ports:
+      - "80:80"
+    labels:
+      - SERVICE_TAGS=traefik.enable=true,traefik.http.routers.app.rule=Host(`First-node.my.domain`) && PathPrefix(`/app`),traefik.http.routers.app.middlewares=app-stripprefix,traefik.http.middlewares.app-stripprefix.stripprefix.prefixes=/app,traefik.http.routers.app.tls=true
+      - SERVICE_NAME=app
+      - SERVICE_ADDRESS={{ hostvars['docker2']['ansible_host']}}

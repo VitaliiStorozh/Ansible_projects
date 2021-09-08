@@ -1,0 +1,8 @@
+network:
+    version: 2
+    ethernets:
+        eth1:                                 # Private network interface
+            nameservers:
+                addresses:
+                - 192.168.1.208                # Private IP for ns1
+                search: [ my.domain ]  # DNS zone

@@ -1,0 +1,17 @@
+$TTL	604800
+@	IN	SOA	DNS-node.my.domain. admin.my.domain. (
+			      3		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+; name servers - NS records
+    IN      NS      DNS-node.my.domain.
+
+; name servers - A records
+DNS-node.my.domain.           IN      A      192.168.1.208
+
+; 192.168.0.0/16 - A records
+First-node.my.domain.         IN      A      192.168.1.209
+Second-node.my.domain.        IN      A      192.168.1.210

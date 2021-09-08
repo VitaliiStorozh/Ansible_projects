@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  registrator:
+    depends_on:
+      - consul
+    image: gliderlabs/registrator:master
+    restart: always
+    command: -useIpFromLabel SERVICE_ADDRESS -internal consul://{{ hostvars['docker2']['ansible_host']}}:8500
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+
+  consul:
+    image: consul
+    container_name: "consul"
+    command: agent -server -advertise {{ hostvars['docker2']['ansible_host']}} -join {{ hostvars['docker1']['ansible_host']}} -client=0.0.0.0
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8500:8500'
+
+  test:
+    image: adminer:4.8.1-standalone
+    ports:
+      - "8080:8080"
+    labels:
+      - SERVICE_TAGS=traefik.enable=true,traefik.http.routers.test.rule=Host(`First-node.my.domain`) && Path(`/test`),traefik.http.routers.test.entrypoints=websecure,traefik.http.routers.test.tls.certresolver=myresolver
+      - SERVICE_NAME=test
+      - SERVICE_ADDRESS={{ hostvars['docker2']['ansible_host']}}
+
+  app:
+    image: hashicorp/http-echo
+    command: -text="Hello there, I'm app page!"
+    ports:
+      - "5678:5678"
+    labels:
+      - SERVICE_TAGS=traefik.enable=true,traefik.http.routers.app.rule=Host(`First-node.my.domain`) && Path(`/app`),traefik.http.routers.app.entrypoints=websecure,traefik.http.routers.app.tls.certresolver=myresolver
+      - SERVICE_NAME=app
+      - SERVICE_ADDRESS={{ hostvars['docker2']['ansible_host']}}

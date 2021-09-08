@@ -1,0 +1,9 @@
+---
+- name: First Project
+  hosts: all
+  become: yes
+
+  roles:
+    - role: deploy_dns_server
+    - { role: deploy_traefik_consul_vault, when: ansible_nodename == "First-node" }
+    - { role: deploy_apps_registrator, when: ansible_nodename == "Second-node" }
