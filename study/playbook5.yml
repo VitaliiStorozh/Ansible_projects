@@ -1,0 +1,47 @@
+---
+- name: Install Apache Web Server and upload my web site
+  hosts: all
+  become: yes
+
+  vars:
+    sours_file: ./simple_web_page/index.html
+    destin_file: /var/www/html
+
+  tasks:
+    - name: Check and Print Linux version
+      debug: var=ansible_os_family
+
+    - block:  #=======Block for REDHAT==========#
+
+      - name: Install Apache WebServer for RedHat
+        apt: name=httpd state=present
+
+      - name: Copy My homepage
+        copy: src={{ sours_file }} dest={{ destin_file }} mode=0555
+        notify: Restart Apache RedHat
+
+      - name: Start Apache and Enable it on the every boot
+        service: name=httpd state=started enabled=yes
+
+      when: ansible_os_family == "RedHat"
+
+    - block:  #=======Block for DEBIAN==========#
+
+      - name: Install Apache WebServer for Debian
+        apt: name=apache2 state=present
+
+      - name: Copy My homepage
+        copy: src={{ sours_file }} dest={{ destin_file }} mode=0555
+        notify: Restart Apache Debian
+
+      - name: Start Apache and Enable it on the every boot
+        service: name=apache2 state=started enabled=yes
+
+      when: ansible_os_family == "Debian"
+
+  handlers:
+    - name: Restart Apache RedHat
+      service: name=httpd state=restarted
+
+    - name: Restart Apache Debian
+      service: name=apache2 state=restarted

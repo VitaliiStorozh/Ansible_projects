@@ -1,0 +1,60 @@
+---
+##### Install zabbix-agent
+
+- name: check OS
+  debug: msg={{ansible_distribution}}-{{ansible_distribution_version}}
+
+### centOS 7
+- name: disable SELinux
+  selinux:
+    state: disabled
+  when: ansible_os_family == "RedHat"
+
+- name: install zabbix centOS 7 rpm file
+  yum:
+    name: "{{ centos7_link }}"
+
+- name: install zabbix-agent 5 for centOS 7
+  yum: 
+    name: zabbix-agent
+    enablerepo: zabbix
+    update_cache: true
+    state: latest
+
+- name: Open Firewall Port
+  firewalld:
+    zone: public
+    port: 10050/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Change ip for Server
+  ansible.builtin.replace:
+    path: /etc/zabbix/zabbix_agentd.conf
+    regexp: 'Server=127.0.0.1'
+    replace: "Server={{ zbx_srv }}"
+
+- name: Change ip for ServerActive
+  ansible.builtin.replace:
+    path: /etc/zabbix/zabbix_agentd.conf
+    regexp: 'ServerActive=127.0.0.1'
+    replace: "ServerActive={{ zbx_srv }}"
+
+- name: Change Hostname
+  ansible.builtin.replace:
+    path: /etc/zabbix/zabbix_agentd.conf
+    regexp: 'Hostname=Zabbix server'
+    replace: "Hostname={{ owner }}"
+
+- name: Change Timeout
+  ansible.builtin.replace:
+    path: /etc/zabbix/zabbix_agentd.conf
+    regexp: '# Timeout=3'
+    replace: "Timeout=10"
+
+- name: Start & Enable Zabbix-agent
+  systemd:
+    name: zabbix-agent
+    state: started
+    enabled: true

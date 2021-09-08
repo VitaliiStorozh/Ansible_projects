@@ -1,0 +1,16 @@
+---
+- hosts: slave
+  become: yes
+  tasks:
+ 
+  - name: Add user to remote hosts
+    user: name=silver groups=wheel shell=/bin/bash password=12345
+ 
+  - name: Add SSH keys to remote hosts
+    authorized_key: user=silver key="{{ lookup('file', "/home/silver/.ssh/id_rsa.pub") }}"
+ 
+  - name: Add user to remote hosts
+    user: name=jenkins groups=wheel shell=/bin/bash password=12345
+ 
+  - name: Add SSH keys to remote hosts
+    authorized_key: user=jenkins key="{{ lookup('file', "/home/silver/.ssh/id_rsa.pub") }}"

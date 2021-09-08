@@ -1,0 +1,9 @@
+---
+- name: Restore JENKINS
+  hosts: all
+  gather_facts: false
+  become: true
+  
+  roles:
+    - jenkins_master
+    - jenkins_slave

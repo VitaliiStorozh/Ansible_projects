@@ -1,0 +1,4 @@
+[jenkins]
+master ansible_host=10.26.1.9
+slave  ansible_host=10.26.0.176
+bcp    ansible_host=10.26.1.163

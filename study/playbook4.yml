@@ -1,0 +1,22 @@
+---
+  - name: Playbook for trainee variables
+    hosts: all
+    become: yes
+
+    vars:
+      message1: Hello
+      message2: World
+      secret: ;LFDKJGJB;FDLJBMDS;LVKMSTFD;LVMK
+
+    tasks:
+      - name: Print Secret Variables
+        debug:
+          var: secret
+
+      - debug:
+          msg: "Sekret word: {{ secret }}"
+
+      - set_fact: full_message="{{ message1 }} {{ message2 }}"
+
+      - debug:
+          var: full_message

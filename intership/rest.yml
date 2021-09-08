@@ -1,0 +1,13 @@
+---
+- name: Sync Push task - Executed on source host "{{groups['jenkins'][2]}}"
+  hosts: "{{groups['jenkins'][1]}}" 
+  tasks:
+    - name: Copy the file from mwiapp01 to mwiapp02 using Method Push
+      tags: sync-push
+      synchronize:
+        src: /mnt/sdb/bcp/jmaster/jenkinsm-12-Mar-2021.tgz
+        dest: /tmp/jenkinsm-12-Mar-2021.tgz
+        mode: push
+      delegate_to: "{{groups['jenkins'][2]}}"
+      register: syncfile
+      

@@ -1,0 +1,36 @@
+---
+# tasks file for setup_jenkins_nodes
+
+
+- name: Confige DNS
+  copy: src=/home/vitalii/ansible/roles/setup_jenkins_master/files/resolv.conf dest=/etc/
+
+- name: Install yum
+  yum:
+    name:
+      - java-1.8.0-openjdk-devel
+      - git
+
+- name: Add sbt repo
+  yum_repository:
+    name: sbt
+    baseurl: https://sbt.bintray.com/rpm
+    gpgcheck: no
+    repo_gpgcheck: no
+    description: Scala Build Tool
+
+- name: Install sbt
+  yum:
+    name:
+      - sbt
+    state: present
+
+- name: Creates jenkins work directory
+  file:
+    path: /root/jenkins
+    state: directory
+
+- name: Add SSH keys Jenkins-master to Jenkinse-node
+  authorized_key: user=root key="{{ lookup('file', "/home/vitalii/.ssh/jenkins_master_key.pub") }}"
+
+

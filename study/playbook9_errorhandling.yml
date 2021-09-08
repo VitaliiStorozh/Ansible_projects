@@ -1,0 +1,22 @@
+---
+  - name: Errors Handling
+    hosts: all
+    any_errors_fatal: true
+    become: yes
+
+    tasks:
+      - name: Task Number1
+        apt: name=treeee state=latest
+        ignore_errors: yes
+
+      - name: Task Number2
+        shell: echo Hello World!
+        register: results
+        # failed_when: results.rc == 0
+        # failed_when: "'World' in results.stdout"
+
+      - debug:
+          var: results
+
+      - name: Task Number3
+        shell: echo Just Do It!

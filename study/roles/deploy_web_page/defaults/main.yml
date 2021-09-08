@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_web_page
+destin_folder: /var/www/html

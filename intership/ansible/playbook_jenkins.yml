@@ -1,0 +1,17 @@
+--- 
+- name: Install Jenkins Server
+  hosts: jenkins_master
+  gather_facts: false
+  become: true
+
+  roles:
+   - setup_jenkins_master
+
+
+- name: Install Jenkins Nodes
+  hosts: jenkins_slave
+  gather_facts: false
+  become: true
+
+  roles:
+    - setup_jenkins_nodes
