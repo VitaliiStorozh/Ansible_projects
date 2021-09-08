@@ -1,0 +1,26 @@
+#----------------------------------------------
+#
+# File for creating folders
+#
+# Created by Vitalii Storozh
+#
+#----------------------------------------------
+
+---
+        - name: Create folder1
+          file:
+            path: /home/secret/folder1
+            state: directory
+            mode: 0755
+
+        - name: Create folder2
+          file:
+            path: /home/secret/folder2
+            state: directory
+            mode: 0755
+
+        - name: Create folder3
+          file:
+            path: /home/secret/folder3
+            state: directory
+            mode: 0755

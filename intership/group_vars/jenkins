@@ -1,3 +1,0 @@
----
-ansible_user                  : silver
-ansible_ssh_private_key_file  : /home/silver/.ssh/id_rsa

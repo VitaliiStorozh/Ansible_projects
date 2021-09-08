@@ -1,0 +1,17 @@
+#----------------------------------------------
+#
+# Task for testing connect with servers
+#
+# Created by Vitalii Storozh
+#
+#----------------------------------------------
+
+---
+- name : Test Conecting to my servers
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Ping my servers
+      ping:

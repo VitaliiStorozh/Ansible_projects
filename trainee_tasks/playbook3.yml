@@ -1,0 +1,31 @@
+#----------------------------------------------
+#
+# Task for Install Apache Web Server and upload my web site
+#
+# Created by Vitalii Storozh
+#
+#----------------------------------------------
+
+---
+- name: Install Apache Web Server and upload my web site
+  hosts: all
+  become: yes
+
+  vars:
+    sours_file: ./simple_web_page/index.html
+    destin_file: /var/www/html
+
+  tasks:
+    - name: Install Apache WebServer
+      apt: name=apache2 state=present
+
+    - name: Copy My homepage
+      copy: src={{ sours_file }} dest={{ destin_file }} mode=0555
+      notify: Restart Apache
+
+    - name: Start Apache and Enable it on the every boot
+      service: name=apache2 state=started enabled=yes
+
+  handlers:
+    - name: Restart Apache
+      service: name=apache2 state=restarted

@@ -1,7 +1,0 @@
----
-# vars file for jenkins_master
-bcname: jenkinsm-18-Mar-2021.tgz
-# old slave ip
-oldip: \b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b
-# new slave ip
-#newip: jenkins.slave.ansible_host}}

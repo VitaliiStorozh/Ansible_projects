@@ -1,0 +1,25 @@
+#----------------------------------------------
+#
+# Commands for working with Asible Vault
+#
+# Created by Vitalii Storozh
+#
+#----------------------------------------------
+
+  ansible-vault create mysecret.txt                                              - Create encrypted file
+  ansible-vault view mysecret.txt                                                - View encrypted file
+  ansible-vault edit mysecret.txt                                                - Edit encrypted file
+
+  ansible-vault rekey mysecret.txt                                               - Change password for encrypted file
+
+
+  ansible-vault encrypt myfile.yml                                               - Encrypt file
+  ansible-vault decrypt myfile.yml                                               - Decrypt file
+
+
+  ansible-playbook myplaybook.yml --ask-vault-pass                               - Run encrypted playbook
+  ansible-playbook myplaybook.yml --vault-password-file PasswordForVault.txt     - Run encrypted playbook using file with password
+
+
+  ansible-vault encrypt_string                                                   - Encrypt string in playbooks
+  echo -n "secretword" | ansible-vault encrypt_string                            - Encrypt string in playbooks
