@@ -10,6 +10,7 @@
     state: directory
     mode: 0755
 
+# Task for creating selfsigned sertification for my domain
 - name: Create certificate
   copy: src=create_certificate_for_domain.sh dest=/home/vagrant/configuration/ mode=755
 - name: Generate certeficate
@@ -17,6 +18,7 @@
 - name: Create certificate
   copy: src=certificates.yml dest=/home/vagrant/configuration/
 
+# Create cron job for revoke certificate if it needed
 - name: Create cron job for revoke certeficate
   cron:
     name: "create_certificate"

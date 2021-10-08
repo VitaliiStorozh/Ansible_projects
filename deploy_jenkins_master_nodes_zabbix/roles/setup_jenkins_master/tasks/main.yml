@@ -1,9 +1,13 @@
 ---
 # tasks file for setup_jenkins_master
+# Restore backup from github repositories
+# Conections Master with Nodes
 
+# Configuration DNS for possibility using internet connection in own cloud system
 - name: Confige DNS
   copy: src=/home/vitalii/ansible/roles/setup_jenkins_master/files/resolv.conf dest=/etc/
 
+# Installing necessary tools for install Jenkins on this machine
 - name: Install yum
   yum:
     name:
@@ -11,6 +15,7 @@
       - java-1.8.0-openjdk
       - git
 
+# Next steps used for installing Jenkins master on the machine
 - name: Download jenkins.repo
   get_url:
     url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
@@ -42,6 +47,8 @@
     permanent: true
     state: enabled
     immediate: true
+
+# Next steps used for restoring backup our Jenkins with all configurations and pipelines if it is not primary setup Jenkins
 - name: Remove directory
   file:
     path: /var/lib/jenkins
@@ -65,6 +72,7 @@
 - name: Change owner directory Jenkins
   file: dest=/var/lib/jenkins owner=jenkins group=jenkins mode=0775 recurse=yes
 
+# Connect Nodes to the master if it necessary
 - name: Change ip for Nodes
   ansible.builtin.replace:
     path: /var/lib/jenkins/nodes/Node1/config.xml

@@ -22,10 +22,6 @@ resource "aws_instance" "docker1" {
   key_name               = aws_key_pair.deployer.id
   user_data              = file("user_data_docker.sh")
 
-  # network_interface {
-  #   network_interface_id = aws_network_interface.docker1.id
-  #   device_index         = 0
-  # }
   tags = merge(var.common_tag, { Name = var.name_server1 })
 }
 
@@ -39,10 +35,6 @@ resource "aws_instance" "docker2" {
   key_name               = aws_key_pair.deployer.id
   user_data              = file("user_data_docker.sh")
 
-  # network_interface {
-  #   network_interface_id = aws_network_interface.docker2.id
-  #   device_index         = 0
-  # }
   tags = merge(var.common_tag, { Name = var.name_server2 })
 }
 
@@ -55,65 +47,6 @@ resource "aws_instance" "ansible" {
   monitoring             = var.detailed_monitoring
   key_name               = aws_key_pair.deployer.id
   user_data              = file("user_data_ansible.sh")
-  # network_interface {
-  #   network_interface_id = aws_network_interface.ansible.id
-  #   device_index         = 0
-  # }
+
   tags = merge(var.common_tag, { Name = var.name_server3 })
 }
-
-
-# resource "aws_vpc" "my_vpc" {
-#   cidr_block = "172.16.0.0/16"
-#
-#   tags = {
-#     Name = "tf-example"
-#   }
-# }
-#
-# resource "aws_internet_gateway" "gw" {
-#   vpc_id = aws_vpc.my_vpc.id
-# }
-#
-# resource "aws_subnet" "my_subnet" {
-#   vpc_id                  = aws_vpc.my_vpc.id
-#   cidr_block              = "172.16.10.0/24"
-#   availability_zone       = "us-east-2a"
-#   map_public_ip_on_launch = true
-#
-#
-#   tags = {
-#     Name = "tf-example"
-#   }
-#   depends_on = [aws_internet_gateway.gw]
-# }
-#
-# resource "aws_network_interface" "docker1" {
-#   subnet_id       = aws_subnet.my_subnet.id
-#   private_ips     = ["172.16.10.101"]
-#   security_groups = [aws_security_group.dcrtv.id]
-#
-#   tags = {
-#     Name = "docker1_network_interface"
-#   }
-# }
-#
-# resource "aws_network_interface" "docker2" {
-#   subnet_id       = aws_subnet.my_subnet.id
-#   private_ips     = ["172.16.10.102"]
-#   security_groups = [aws_security_group.dcrtv.id]
-#
-#   tags = {
-#     Name = "docker2_network_interface"
-#   }
-# }
-#
-# resource "aws_network_interface" "ansible" {
-#   subnet_id       = aws_subnet.my_subnet.id
-#   private_ips     = ["172.16.10.100"]
-#   security_groups = [aws_security_group.dcrtv.id]
-#
-#   tags = {
-#     Name = "ansible_network_interface"
-#   }
-# }

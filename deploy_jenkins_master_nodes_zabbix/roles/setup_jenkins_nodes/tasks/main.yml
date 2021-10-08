@@ -2,15 +2,18 @@
 # tasks file for setup_jenkins_nodes
 
 
+# Configuration DNS for possibility using internet connection in own cloud system
 - name: Confige DNS
   copy: src=/home/vitalii/ansible/roles/setup_jenkins_master/files/resolv.conf dest=/etc/
 
+# Installing necessary tools for install Jenkins on this machine
 - name: Install yum
   yum:
     name:
       - java-1.8.0-openjdk-devel
       - git
 
+# configure the machine for using it as node for work with scala-projects
 - name: Add sbt repo
   yum_repository:
     name: sbt
@@ -30,7 +33,6 @@
     path: /root/jenkins
     state: directory
 
+# Connect this instance as Jenkins-node to the Master with permissions
 - name: Add SSH keys Jenkins-master to Jenkinse-node
   authorized_key: user=root key="{{ lookup('file', "/home/vitalii/.ssh/jenkins_master_key.pub") }}"
-
-

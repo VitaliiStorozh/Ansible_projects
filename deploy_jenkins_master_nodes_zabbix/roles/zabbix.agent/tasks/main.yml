@@ -1,3 +1,7 @@
+# This is role for installing zabbix-agent on instances
+# In case we have instances with difererence OS-families, we can added the same task for othe distributions
+# This task finishing only for centos7
+
 ---
 ##### Install zabbix-agent
 
@@ -15,7 +19,7 @@
     name: "{{ centos7_link }}"
 
 - name: install zabbix-agent 5 for centOS 7
-  yum: 
+  yum:
     name: zabbix-agent
     enablerepo: zabbix
     update_cache: true

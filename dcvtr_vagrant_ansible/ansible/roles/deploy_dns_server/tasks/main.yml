@@ -1,5 +1,7 @@
 ---
 # tasks file for deploy_dns_server
+# This is automation process to run Bind9 DNS server on local or virtual instance with configuration it
+
 - block: # =======Block for DNS_node======
     - name: Update environment
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
