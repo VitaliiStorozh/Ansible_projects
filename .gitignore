@@ -4,3 +4,4 @@ PasswordForVault.txt
 .terraform*
 terraform.tfstate*
 ansible_vault_cheet_sheets.txt
+.dot
